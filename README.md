@@ -1,2 +1,13 @@
 # Test_Project
-Use xml to descript platforms
+-----------
+Use json file to describe platforms
+# Installation
+-----------
+```
+cd jsoncpp-master
+make
+cd ..
+make
+```
+# Json file example
+-----------
