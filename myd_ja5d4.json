@@ -1,8 +1,21 @@
 [
     {
-        "email" : "zhangguoli@123.com",
-        "name" : "张国立",
-        "sex" : "男"
+        "name" : "ttyO1",
+        "device_type" : "uart",
+        "device_node" : "/dev/ttyO1",
+        "baudrate" : 115200,
+        "databit" : 8,
+        "parity" : "n",
+        "stopbit" : 1
+    },
+    {
+        "name" : "ttyO2",
+        "device_type" : "uart",
+        "device_node" : "/dev/ttyO2",
+        "baudrate" : 115200,
+        "databit" : 8,
+        "parity" : "n",
+        "stopbit" : 1
     },
     {
         "email" : "zhangtieli@123.com",

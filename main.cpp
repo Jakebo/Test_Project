@@ -32,8 +32,10 @@ int main(int argc, char *argv[])
     if (d_file.length() == 0)
         display_usage(argv[0]);
 
+    init_create_map();
+
     if (open_jsonfile(d_file, &root) == 0)
         parse_device(root);
-    
+
     return 0;
 }

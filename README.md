@@ -5,8 +5,10 @@ Use json file to describe platforms
 -----------
 ```
 cd jsoncpp-master
+make clean
 make
 cd ..
+make clean
 make
 ```
 # Json file example
