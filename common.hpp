@@ -15,6 +15,7 @@ extern const std::string DEVICE_STOPBIT;
 
 struct options {
     bool quiet = false;
+    bool auto_test  = false;
     std::string jsonFile;
 };
 

@@ -1,17 +1,14 @@
 #include <map>
 
 #include "parse_device.hpp"
-#include "base_device.hpp"
 #include "uart_device.hpp"
 
-// Point to create function
-typedef int (*create_device)(const Json::Value &d_value);
 // Root of json file(global)
 Json::Value root;
 // device type <---> create device instance function
-static std::map<std::string, create_device> create_device_map;
+std::map<std::string, create_device> create_device_map;
 // device name <---> device instance
-static std::map<std::string, BaseDevice *> device_map;
+std::map<std::string, BaseDevice *> device_map;
 
 //
 // open_jsonfile

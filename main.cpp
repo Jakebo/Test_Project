@@ -3,6 +3,7 @@
 
 #include "common.hpp"
 #include "parse_device.hpp"
+#include "test.hpp"
 
 void display_usage(const char *name)
 {
@@ -14,16 +15,19 @@ void display_usage(const char *name)
 int main(int argc, char *argv[])
 {
     char opt;
-    std::string optstring = "qd:";
+    std::string optstring = "ad:q";
 
     opt = getopt(argc, argv, optstring.c_str());
     while (opt != -1) {
         switch (opt) {
-        case 'q':
-            opts.quiet = true;
+        case 'a':
+            opts.auto_test = true;
             break;
         case 'd':
             opts.jsonFile = optarg;
+            break;
+        case 'q':
+            opts.quiet = true;
             break;
         default:
             break;
@@ -43,5 +47,7 @@ int main(int argc, char *argv[])
     parse_device(root);
     display_devices();
 
+    test_process();
+    
     return 0;
 }

@@ -6,6 +6,7 @@
 class BaseDevice {
 public:
     BaseDevice(const Json::Value &device);
+    bool GetTestResult(void);
     virtual bool TestDevice(void) = 0;
 
     // If you didn't implemented the virtual destructor, the
@@ -19,6 +20,7 @@ public:
 private:
     std::string name;
     std::string deviceType;
+    bool testResult = false;
 };
 
 #endif

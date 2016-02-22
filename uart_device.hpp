@@ -9,12 +9,16 @@ public:
     UartDevice(const Json::Value &uart);
     bool TestDevice(void);
 
+    int  OpenUart(void);
+
 private:
     std::string deviceNode;
     std::string baudrate;
     std::string parity;
     int databit;
     int stopbit;
+
+    int uartFd = -1;;
 };
     
 #endif
