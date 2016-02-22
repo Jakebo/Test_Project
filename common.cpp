@@ -1,12 +1,6 @@
 #include "common.hpp"
 
-const std::string error_msg[] =
-{ "need to specify device type",
-};
-
-const std::string warning_msg[] =
-{ "Shall to specify device name",
-};
+struct options opts;
 
 const std::string DEVICE_NAME = "name";
 const std::string DEVICE_TYPE = "device_type";

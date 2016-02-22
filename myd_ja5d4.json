@@ -16,15 +16,5 @@
         "databit" : 8,
         "parity" : "n",
         "stopbit" : 1
-    },
-    {
-        "email" : "zhangtieli@123.com",
-        "name" : "张铁林",
-        "sex" : "男"
-    },
-    {
-        "email" : "zhenjie@123.com",
-        "name" : "邓婕",
-        "sex" : "女"
     }
 ]

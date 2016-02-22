@@ -14,5 +14,6 @@ UartDevice::UartDevice(const Json::Value &uart)
 
 bool UartDevice::TestDevice(void)
 {
+    std::cout << __func__ << std::endl;
     return true;
 }

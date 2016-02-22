@@ -13,5 +13,9 @@ int open_jsonfile(const std::string path, Json::Value *root);
 void init_create_map(void);
 // parse_device
 int parse_device(Json::Value &value);
+// delete_devices
+int delete_devices(void);
+// display_devices
+void display_devices(void);
 
 #endif

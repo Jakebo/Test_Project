@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "common.hpp"
 #include "parse_device.hpp"
 
 void display_usage(const char *name)
@@ -14,13 +15,15 @@ int main(int argc, char *argv[])
 {
     char opt;
     std::string optstring = "qd:";
-    std::string d_file = "";
 
     opt = getopt(argc, argv, optstring.c_str());
     while (opt != -1) {
         switch (opt) {
+        case 'q':
+            opts.quiet = true;
+            break;
         case 'd':
-            d_file = optarg;
+            opts.jsonFile = optarg;
             break;
         default:
             break;
@@ -29,13 +32,16 @@ int main(int argc, char *argv[])
         opt = getopt(argc, argv, optstring.c_str());
     }
 
-    if (d_file.length() == 0)
+    if (opts.jsonFile.length() == 0)
         display_usage(argv[0]);
 
     init_create_map();
 
-    if (open_jsonfile(d_file, &root) == 0)
-        parse_device(root);
+    if (open_jsonfile(opts.jsonFile, &root) != 0)
+        return 1;
+    
+    parse_device(root);
+    display_devices();
 
     return 0;
 }
