@@ -7,3 +7,12 @@ BaseDevice::BaseDevice(const Json::Value &device)
     
     return;
 }
+/*
+bool BaseDevice::TestDevice(void)
+{
+    return true;
+}
+*/
+BaseDevice::~BaseDevice()
+{
+}
