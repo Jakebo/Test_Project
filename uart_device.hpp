@@ -9,14 +9,17 @@ public:
     UartDevice(const Json::Value &uart);
     bool TestDevice(void);
 
-    int  OpenUart(void);
+    int  UartInit(void);
+    int  UartSetting(void);
+    
 
 private:
     std::string deviceNode;
     std::string baudrate;
     std::string parity;
-    int databit;
-    int stopbit;
+    int  databit;
+    int  stopbit;
+    bool isRS485Mode = false;
 
     int uartFd = -1;;
 };

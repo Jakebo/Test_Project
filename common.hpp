@@ -12,6 +12,7 @@ extern const std::string DEVICE_BAUDRATE;
 extern const std::string DEVICE_DATABIT;
 extern const std::string DEVICE_PARITY;
 extern const std::string DEVICE_STOPBIT;
+extern const std::string DEVICE_RS485MODE;
 
 struct options {
     bool quiet = false;

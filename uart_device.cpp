@@ -1,5 +1,7 @@
 #include "uart_device.hpp"
 
+#include <fcntl.h>
+
 UartDevice::UartDevice(const Json::Value &uart)
     : BaseDevice(uart)
 {
@@ -8,17 +10,35 @@ UartDevice::UartDevice(const Json::Value &uart)
     this->databit  = uart[DEVICE_DATABIT].asInt();
     this->parity   = uart[DEVICE_PARITY].asString();
     this->stopbit  = uart[DEVICE_STOPBIT].asInt();
+
+    if (uart[DEVICE_RS485MODE] != Json::nullValue)
+        this->isRS485Mode = uart[DEVICE_RS485MODE].asBool();
     
     return;
 }
 
 bool UartDevice::TestDevice(void)
 {
-    std::cout << __func__ << std::endl;
+    dbg_print("Start test %s\n", this->name.c_str());
+
+    if (this->uartFd < 0)
+        if (this->UartInit() != 0)
+            return false;
+    
     return false;
 }
 
-int UartDevice::OpenUart(void)
+int UartDevice::UartInit(void)
 {
-    return uartFd;
+    this->uartFd = open(this->deviceNode.c_str(),
+                        O_RDWR);
+    if (this->uartFd < 0)
+        return -1;
+    
+    return this->UartSetting();
+}
+
+int UartDevice::UartSetting(void)
+{
+    return 0;
 }

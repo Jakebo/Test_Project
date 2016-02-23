@@ -9,3 +9,4 @@ const std::string DEVICE_BAUDRATE = "baudrate";
 const std::string DEVICE_DATABIT  = "databit";
 const std::string DEVICE_PARITY   = "parity";
 const std::string DEVICE_STOPBIT  = "stopbit";
+const std::string DEVICE_RS485MODE = "rs485";

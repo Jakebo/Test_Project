@@ -17,9 +17,11 @@ public:
     // cause undefined behaviour [-Wdelete-non-virtual-dtor]
     virtual ~BaseDevice();
     
-private:
+protected:
     std::string name;
     std::string deviceType;
+
+private:
     bool testResult = false;
 };
 
