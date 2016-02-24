@@ -6,7 +6,9 @@
         "baudrate" : 115200,
         "databit" : 8,
         "parity" : "n",
-        "stopbit" : 1
+        "stopbit" : 1,
+        "loop" : 100,
+        "teststr" : "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     },
     {
         "name" : "ttyO2",

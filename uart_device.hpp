@@ -15,13 +15,15 @@ public:
 
 private:
     std::string deviceNode;
-    std::string baudrate;
+    int baudrate;
     std::string parity;
     int  databit;
     int  stopbit;
     bool isRS485Mode = false;
+    int  loop = -1;
+    std::string testStr = "0123456789";
 
-    int uartFd = -1;;
+    int uartFd = -1;
 };
     
 #endif

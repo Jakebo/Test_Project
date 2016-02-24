@@ -10,3 +10,5 @@ const std::string DEVICE_DATABIT  = "databit";
 const std::string DEVICE_PARITY   = "parity";
 const std::string DEVICE_STOPBIT  = "stopbit";
 const std::string DEVICE_RS485MODE = "rs485";
+const std::string DEVICE_LOOP      = "loop";
+const std::string DEVICE_TESTSTR   = "teststr";
