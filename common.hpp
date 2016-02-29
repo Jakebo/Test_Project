@@ -13,6 +13,7 @@ extern const std::string DEVICE_DATABIT;
 extern const std::string DEVICE_PARITY;
 extern const std::string DEVICE_STOPBIT;
 extern const std::string DEVICE_RS485MODE;
+extern const std::string DEVICE_LOOP;
 extern const std::string DEVICE_TESTSTR;
 
 struct options {
