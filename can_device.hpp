@@ -15,8 +15,9 @@ public:
     bool TestDevice(void);
 
 private:
-    can_baudrate_t *baudrate;
+    can_baudrate_t baudrate;
     int loop = -1;
+    int canFd = -1;
 };
 
 #endif
