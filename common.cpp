@@ -12,3 +12,6 @@ const std::string DEVICE_STOPBIT  = "stopbit";
 const std::string DEVICE_RS485MODE = "rs485";
 const std::string DEVICE_LOOP      = "loop";
 const std::string DEVICE_TESTSTR   = "teststr";
+// Ethernet
+const std::string DEVICE_IPADDR = "ipaddr";
+const std::string DEVICE_DESTIP = "destip";

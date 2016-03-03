@@ -2,6 +2,7 @@
 
 #include <termios.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 UartDevice::UartDevice(const Json::Value &uart)
     : BaseDevice(uart)
@@ -35,6 +36,9 @@ bool UartDevice::TestDevice(void)
 
 int UartDevice::UartInit(void)
 {
+    if (this->uartFd > 0)
+        close(this->uartFd);
+    
     this->uartFd = open(this->deviceNode.c_str(),
                         O_RDWR);
     if (this->uartFd < 0) {
@@ -141,4 +145,8 @@ int UartDevice::UartSetting(void)
     return 0;
 }
 
-//int UartDevice::Uart
+UartDevice::~UartDevice()
+{
+    if (this->uartFd > 0)
+        close(this->uartFd);
+}

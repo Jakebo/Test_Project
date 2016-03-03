@@ -6,6 +6,8 @@
 
 #include <linux/can.h>
 
+#define SIOCSCANBAUDRATE (SIOCDEVPRIVATE+0)
+
 typedef uint32_t can_baudrate_t;
 
 class CanDevice : public BaseDevice {
@@ -14,6 +16,7 @@ public:
     int CanInit(void);
     bool TestDevice(void);
 
+    ~CanDevice();
 private:
     can_baudrate_t baudrate;
     int loop = -1;

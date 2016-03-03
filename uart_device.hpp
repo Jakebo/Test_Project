@@ -12,7 +12,7 @@ public:
     int  UartInit(void);
     int  UartSetting(void);
     
-
+    ~UartDevice();
 private:
     std::string deviceNode;
     int baudrate;

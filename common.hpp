@@ -15,6 +15,9 @@ extern const std::string DEVICE_STOPBIT;
 extern const std::string DEVICE_RS485MODE;
 extern const std::string DEVICE_LOOP;
 extern const std::string DEVICE_TESTSTR;
+// Ethernet
+extern const std::string DEVICE_IPADDR;
+extern const std::string DEVICE_DESTIP;
 
 struct options {
     bool quiet = false;
