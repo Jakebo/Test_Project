@@ -3,6 +3,7 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
 
 UartDevice::UartDevice(const Json::Value &uart)
     : BaseDevice(uart)
@@ -19,7 +20,7 @@ UartDevice::UartDevice(const Json::Value &uart)
         this->testStr = uart[DEVICE_TESTSTR].asString();
     if (uart[DEVICE_LOOP] != Json::nullValue)
         this->loop = uart[DEVICE_LOOP].asInt();
-    
+
     return;
 }
 
@@ -30,6 +31,9 @@ bool UartDevice::TestDevice(void)
     if (this->uartFd < 0)
         if (this->UartInit() != 0)
             return false;
+
+    if (this->UartTestTransmit() != 0)
+        return false;
     
     return true;
 }
@@ -142,8 +146,121 @@ int UartDevice::UartSetting(void)
         return -1;
     }
 
+    // @TODO: Add rs485 support
+    
     return 0;
 }
+
+int UartDevice::UartCheckString(const char *base, const char *buf)
+{
+    static int idx = 0;
+    static bool first = true;;
+    int baseLen = strlen(base);
+    int bufLen = strlen(buf);
+    int bufIdx = 0;
+
+    while (bufIdx < bufLen) {
+        if (buf[bufIdx] != base[idx]) {
+            for (idx = 0; idx < baseLen; ++idx)
+                if (buf[bufLen - 1] == base[idx])
+                    break;
+            if (idx == baseLen) {
+                idx = 0;
+                return -1;
+            }
+            idx = (idx + 1) % baseLen;
+            if (first) {
+                first = false;
+                return 0;
+            } else
+                return -1;
+        }
+
+        ++idx;
+        idx = idx % baseLen;
+        ++bufIdx;
+    }
+
+    return 0;
+}
+
+int UartDevice::UartTestTransmit(void)
+{
+    char recvBuf[1024] = { 0 };
+    int  tries = 0;
+    long xmitCnt = 0;
+    long recvCnt = 0;
+    int  ret;
+
+    struct timeval tv;
+    fd_set fds;
+
+    tv.tv_sec = this->timeout;
+    tv.tv_usec = 0;
+
+    while (loop == -1 || loop--) {
+        // Transmit data
+        if ((ret = write(this->uartFd,
+                         this->testStr.data(),
+                         this->testStr.length())) < 0) {
+            ++tries;
+            dbg_print("WARNING: Transmit data on %s failed, retry %d%s times\n",
+                      this->name.c_str(),
+                      tries,
+                      (tries == 2) ? "nd" : "th");
+            if (tries > 3)
+                dbg_print("ERROR: Transmit data on %s failed, retry times exceed"
+                          "%d, Cancel transmitting this packet and receive data directly\n",
+                          this->name.c_str(),
+                          tries);
+            else
+                continue;
+        }
+        tries = 0;
+        xmitCnt += ret;
+        dbg_print("INFO: transmit: %d\n", xmitCnt);
+
+        // Receive data
+        if (this->timeout > 0) {
+            FD_ZERO(&fds);
+            FD_SET(this->uartFd, &fds);
+
+            ret = select(this->uartFd + 1, &fds, NULL, NULL, &tv);
+            if (ret == -1 || ret == 0) {
+                ++tries;
+                dbg_print("WARNING: Receive data on %s failed, retry %d%s times\n",
+                          this->name.c_str(),
+                          tries,
+                          tries == 2 ? "nd" : "th");
+            }
+            if (tries > 3) {
+                dbg_print("ERROR: Receive data on %s failed, retry times exceed %d,"
+                          "Cancel receiving a packet and send data again\n",
+                          this->name.c_str(),
+                          tries);
+                continue;
+            }
+        }
+
+        tries = 0;
+        ret = read(this->uartFd, recvBuf, sizeof(recvBuf));
+        if (ret < 0) {
+            dbg_print("ERROR: Read data from %s failed, Skip this reading and send data again\n",
+                      this->name.c_str());
+            continue;
+        }
+
+        recvCnt += ret;
+        dbg_print("INFO: Receive: %d\n", recvCnt);
+
+        // Verify data
+        if (this->UartCheckString(this->testStr.data(), recvBuf) != 0) {
+            // TODO
+        }
+    }
+
+    return 0;
+};
 
 UartDevice::~UartDevice()
 {

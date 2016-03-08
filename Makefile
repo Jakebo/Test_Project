@@ -224,7 +224,7 @@ ifeq ($(SRC_CXX),)              # C program
 	$(LINK.c)   $(OBJS) $(MY_LIBS) -o $@
 	@echo Type ./$@ to execute the program.
 else                            # C++ program
-	$(LINK.cxx) $(OBJS) $(MY_LIBS) -o $@  $(LDFLAGS)
+	$(LINK.cxx) $(OBJS) $(MY_LIBS) -o $@ $(LDFLAGS)
 	@echo Type ./$@ to execute the program.
 endif
 

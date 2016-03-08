@@ -11,6 +11,8 @@ public:
 
     int  UartInit(void);
     int  UartSetting(void);
+    int  UartCheckString(const char *base, const char *buf);
+    int  UartTestTransmit(void);
     
     ~UartDevice();
 private:
@@ -21,6 +23,7 @@ private:
     int  stopbit;
     bool isRS485Mode = false;
     int  loop = -1;
+    int  timeout = -1;
     std::string testStr = "0123456789";
 
     int uartFd = -1;

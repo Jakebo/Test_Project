@@ -14,7 +14,7 @@ void display_usage(const char *name)
 
 int main(int argc, char *argv[])
 {
-    char opt;
+    int opt;
     std::string optstring = "ad:q";
 
     opt = getopt(argc, argv, optstring.c_str());

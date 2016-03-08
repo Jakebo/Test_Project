@@ -15,7 +15,7 @@
 ########################
 
 //Install dir for static libraries
-ARCHIVE_INSTALL_DIR:PATH=/home/jakebo/work/Test_Project/jsoncpp-master
+ARCHIVE_INSTALL_DIR:PATH=/home/jakebo/work/Test_Project/jsoncpp-master/build/debug
 
 //Build jsoncpp_lib as a shared library.
 BUILD_SHARED_LIBS:BOOL=OFF
@@ -173,6 +173,9 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //Path to a program.
 CMAKE_STRIP:FILEPATH=/usr/bin/strip
 
+//No help, variable specified on the command line.
+CMAKE_TOOLCHAIN_FILE:UNINITIALIZED=/home/jakebo/Cross_Compile/gcc-linaro-arm-linux-gnueabihf-4.7-2013.03-20130313_linux/arm-linux-gnueabihf-4.7-2013.03.cmake
+
 //If true, cmake will use relative paths in makefiles and projects.
 CMAKE_USE_RELATIVE_PATHS:BOOL=OFF
 
@@ -226,6 +229,9 @@ jsoncpp_BINARY_DIR:STATIC=/home/jakebo/work/Test_Project/jsoncpp-master
 
 //Value Computed by CMake
 jsoncpp_SOURCE_DIR:STATIC=/home/jakebo/work/Test_Project/jsoncpp-master
+
+//Dependencies for target
+jsoncpp_lib_LIB_DEPENDS:STATIC=
 
 //Dependencies for target
 jsoncpp_lib_static_LIB_DEPENDS:STATIC=

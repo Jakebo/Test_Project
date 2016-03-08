@@ -2,6 +2,8 @@
 
 #include "parse_device.hpp"
 #include "uart_device.hpp"
+#include "eth_device.hpp"
+#include "key_device.hpp"
 
 // Root of json file(global)
 Json::Value root;
@@ -72,6 +74,32 @@ static int create_uart(const Json::Value &uart)
 }
 
 //
+// Create eth
+//   Create an eth instance, and insert into device map
+//
+static int create_eth(const Json::Value &eth)
+{
+    EthDevice *ethDevice = new EthDevice(eth);
+
+    device_map_insert(eth, ethDevice);
+
+    return 0;
+}
+
+//
+// Create keys
+//   Create keys according json file
+//
+static int create_keys(const Json::Value &keys)
+{
+    KeyDevice *keyDevice = new KeyDevice(keys);
+
+    device_map_insert(keys, keyDevice);
+    
+    return 0;
+}
+
+//
 // init_create_map
 // Create the global map of creating function
 //
@@ -79,6 +107,10 @@ void init_create_map(void)
 {
     create_device_map.insert(make_pair(std::string("uart"),
                                        create_uart));
+    create_device_map.insert(make_pair(std::string("eth"),
+                                       create_eth));
+    create_device_map.insert(make_pair(std::string("key"),
+                                       create_keys));
 }
 
 //
@@ -151,7 +183,11 @@ void display_devices(void)
          it != device_map.end();
          ++it, ++index) {
         printf("> %d. %-18s", index, it->first.c_str());
-        printf("> %d. %s\n", ++index, (++it)->first.c_str());
+        if ((++it) == device_map.end()) {
+            printf("\n");
+            break;
+        }
+        printf("> %d. %s\n", ++index, it->first.c_str());
     }
     printf("-------------------------------------------------\n");
 }

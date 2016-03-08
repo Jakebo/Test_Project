@@ -1,8 +1,8 @@
 [
     {
-        "name" : "ttyO1",
+        "name" : "ttyS1",
         "device_type" : "uart",
-        "device_node" : "/dev/ttyO1",
+        "device_node" : "/dev/ttyS1",
         "baudrate" : 115200,
         "databit" : 8,
         "parity" : "n",
@@ -11,12 +11,25 @@
         "teststr" : "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     },
     {
-        "name" : "ttyO2",
-        "device_type" : "uart",
-        "device_node" : "/dev/ttyO2",
-        "baudrate" : 115200,
-        "databit" : 8,
-        "parity" : "n",
-        "stopbit" : 1
+        "name" : "eth0",
+        "device_type" : "eth",
+        "ipaddr" : "192.168.1.113",
+        "destip" : "192.168.1.1",
+        "loop"   : 10
+    },
+    {
+        "name" : "eth1",
+        "device_type" : "eth",
+        "ipaddr" : "192.168.2.113",
+        "destip" : "192.168.2.1",
+        "loop"   : 10
+    },
+    {
+        "name" : "keys",
+        "device_type" : "key",
+        "device_node" : "/dev/input/event1",
+        "codes" : [
+            { "code" : 256 }
+        ]
     }
 ]

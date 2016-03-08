@@ -19,6 +19,9 @@ extern const std::string DEVICE_TESTSTR;
 extern const std::string DEVICE_IPADDR;
 extern const std::string DEVICE_DESTIP;
 
+extern const std::string DEVICE_CODES;
+extern const std::string DEVICE_CODE;
+
 struct options {
     bool quiet = false;
     bool auto_test  = false;

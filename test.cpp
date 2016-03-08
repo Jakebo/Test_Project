@@ -18,8 +18,13 @@ static int test_single(void)
         std::cout << "Input device name>> ";
         std::cin >> device;
 
+        if (device_map[device] == NULL) {
+            printf("'%s' is invalid\n", device.data());
+            continue;
+        }
+        
         result = device_map[device]->TestDevice();
-        printf("%s...[%s]\n", device.c_str(),
+        printf("[%s]...[%s]\n", device.c_str(),
                result ? OK : FAIL);
                
     }
@@ -42,7 +47,7 @@ static int test_sequence(void)
          it != device_map.end();
          ++it) {
         result = (it->second)->TestDevice();
-        printf("%s...[%s]\n",
+        printf("[%s]...[%s]\n",
                (it->first).c_str(),
                result ? OK : FAIL);
         result ? : ++failCount;

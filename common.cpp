@@ -15,3 +15,6 @@ const std::string DEVICE_TESTSTR   = "teststr";
 // Ethernet
 const std::string DEVICE_IPADDR = "ipaddr";
 const std::string DEVICE_DESTIP = "destip";
+
+const std::string DEVICE_CODES = "codes";
+const std::string DEVICE_CODE  = "code";

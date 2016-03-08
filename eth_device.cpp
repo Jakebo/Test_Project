@@ -1,4 +1,5 @@
 #include "eth_device.hpp"
+#include "ping.hpp"
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -22,57 +23,9 @@ EthDevice::EthDevice(const Json::Value &eth)
 
 int EthDevice::EthInit(void)
 {
-    struct hostent *host;
-    struct protoent *protocol;
-    int  cache_size = 50 * 1024;
-    
-    if (this->ethFd > 0)
-        close(this->ethFd);
-
-    // Get icmp protocol
-    if ((protocol = getprotobyname("icmp")) == NULL) {
-        dbg_print("ERROR: Failed to get icmp protocol for %s\n",
-                  this->name.data());
-        return -1;
-    }
-
-    // Create a socket with icmp protocol
-    if ((this->ethFd = socket(AF_INET,
-                                  SOCK_RAW,
-                                  protocol->p_proto)) < 0) {
-        dbg_print("ERROR: Failed to create icmp socket for %s\n",
-                  this->name.data());
-        return -1;
-    }
-
-    // Set to current permit
-    setuid(getuid());
-
     // Set ip address
     this->EthSetIP(this->ipAddr);
     
-    // Set the cache to 50k for avoiding overflow,
-    // If the destination address is an broadcast address
-    // or a multi-cast address, will receive lots of ACK
-    setsockopt(this->ethFd, SOL_SOCKET, SO_RCVBUF,
-                   &cache_size, sizeof(cache_size));
-
-    bzero(&this->dest_sin, sizeof(this->dest_sin));
-    this->dest_sin.sin_family = AF_INET;
-
-    if (inet_addr(this->destIP.data()) == INADDR_NONE) {
-        // Destination address is a hostname
-        if ((host = gethostbyname(this->destIP.data())) == NULL) {
-            dbg_print("ERROR: Get host by name for %s failed\n",
-                      this->name.data());
-            return -1;
-        }
-    } else {
-        this->dest_sin.sin_addr.s_addr = inet_addr(destIP.data());
-    }
-
-    this->pid = getpid();
-
     return 0;
 }
 
@@ -122,86 +75,36 @@ int EthDevice::EthSetIP(const std::string &ip)
     return 0;
 }
 
-int EthDevice::EthPackChkSum(const struct icmp &pack,
-                             const int len)
-{
-    int nLeft = len;
-    int sum = 0;
-    unsigned short *w = (unsigned short *)&pack;
-    unsigned short checkSum = 0;
-
-    while (nLeft > 1) {
-        sum += *w++;
-        nLeft -= 2;
-    }
-
-    if (nLeft == 1)
-        sum += *((unsigned char *)w);
-
-    sum = (sum >> 16) + (sum & 0xFFFFF);
-    sum += (sum >> 16);
-    checkSum = ~sum;
-    
-    return checkSum;
-}
-
-int EthDevice::EthPack(struct icmp &pack,
-                       const int number)
-{
-    int packSize;
-    struct timeval *val;
-
-    pack.icmp_type = ICMP_ECHO;
-    pack.icmp_code  = 1;
-    pack.icmp_cksum = 0;
-    pack.icmp_seq = number;
-    pack.icmp_id  = this->pid;
-
-    packSize = 8 + sizeof(pack);
-    val = (struct timeval *)pack.icmp_data;
-    gettimeofday(val, NULL);
-
-    pack.icmp_cksum = this->EthPackChkSum(pack, sizeof(pack));
-
-    return packSize;
-}
-
-int EthDevice::EthSendPacket(struct sockaddr_in &dest_sin)
-{
-    struct icmp sendPack;
-    int packSize;
-
-    packSize = this->EthPack(sendPack, loop);
-    
-    if (sendto(this->ethFd, &sendPack, packSize, 0,
-               (struct sockaddr *)&dest_sin,
-               sizeof(dest_sin)) < 0) {
-        dbg_print("ERROR: Send to %s failed (%s)\n",
-                  inet_ntoa(dest_sin.sin_addr),
-                  this->name.data());
-        return -1;
-    }
-    
-    return 0;
-}
-
-int EthDevice::EthRecvPacket(void)
-{
-    return 0;
-}
-
 bool EthDevice::TestDevice(void)
 {
-    while (loop) {
-        this->EthSendPacket(this->dest_sin);
-        this->EthRecvPacket();
-    }
+    int failCount = 0;
+    int total = this->loop;
+
+    this->EthInit();
     
+    while (--(this->loop)) {
+        if (ping(this->destIP.data()) == 0) {
+            dbg_print("INFO: Use %s to ping %s is OK\n",
+                      this->name.data(),
+                      this->destIP.data());
+        } else {
+            ++failCount;
+            dbg_print("ERROR: Use %s to ping %s is failed\n",
+                      this->name.data(),
+                      this->destIP.data());
+        }
+    }
+
+    dbg_print("INFO: Use %s to ping %d times, success: %d, fail: %d\n",
+              this->name.data(), total, total - failCount, failCount);
+    
+    if (failCount > 0)
+        return false;
+
     return true;
 }
 
 EthDevice::~EthDevice()
 {
-    if (this->ethFd > 0)
-        close(this->ethFd);
+
 }
