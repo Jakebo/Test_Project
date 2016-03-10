@@ -1,6 +1,5 @@
 #include "can_device.hpp"
 
-#include <unistd.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <net/if.h>

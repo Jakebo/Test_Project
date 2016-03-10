@@ -2,7 +2,6 @@
 
 #include <termios.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <string.h>
 
 UartDevice::UartDevice(const Json::Value &uart)
@@ -218,9 +217,13 @@ int UartDevice::UartTestTransmit(void)
         }
         tries = 0;
         xmitCnt += ret;
-        dbg_print("INFO: transmit: %d\n", xmitCnt);
+        dbg_print("INFO: transmit: %s, %d\n", testStr.data(), xmitCnt);
 
+        usleep(50000);
+        
         // Receive data
+        memset(recvBuf, '\0', sizeof(recvBuf));
+        
         if (this->timeout > 0) {
             FD_ZERO(&fds);
             FD_SET(this->uartFd, &fds);
@@ -251,7 +254,7 @@ int UartDevice::UartTestTransmit(void)
         }
 
         recvCnt += ret;
-        dbg_print("INFO: Receive: %d\n", recvCnt);
+        dbg_print("INFO: Receive:  %s, %d\n", recvBuf, recvCnt);
 
         // Verify data
         if (this->UartCheckString(this->testStr.data(), recvBuf) != 0) {

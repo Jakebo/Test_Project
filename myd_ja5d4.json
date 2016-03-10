@@ -31,5 +31,20 @@
         "codes" : [
             { "code" : 256 }
         ]
+    },
+    {
+        "name" : "sda1",
+        "device_type" : "storage",
+        "device_node" : "/dev/sda1"
+    },
+    {
+        "name" : "sdb1",
+        "device_type" : "storage",
+        "device_node" : "/dev/sdb1"
+    },
+    {
+        "name" : "mtd8",
+        "device_type" : "mtd",
+        "device_node" : "/dev/mtd8"
     }
 ]

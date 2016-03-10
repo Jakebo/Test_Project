@@ -4,6 +4,7 @@
 #include "uart_device.hpp"
 #include "eth_device.hpp"
 #include "key_device.hpp"
+#include "storage_device.hpp"
 
 // Root of json file(global)
 Json::Value root;
@@ -100,6 +101,19 @@ static int create_keys(const Json::Value &keys)
 }
 
 //
+// Create storage device
+//   Create storage from json file
+//
+static int create_storage(const Json::Value &storage)
+{
+    StorageDevice *storageDevice = new StorageDevice(storage);
+
+    device_map_insert(storage, storageDevice);
+
+    return 0;
+}
+
+//
 // init_create_map
 // Create the global map of creating function
 //
@@ -111,6 +125,8 @@ void init_create_map(void)
                                        create_eth));
     create_device_map.insert(make_pair(std::string("key"),
                                        create_keys));
+    create_device_map.insert(make_pair(std::string("storage"),
+                                       create_storage));
 }
 
 //

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdarg.h>
 #include <json/json.h>
+#include <unistd.h>
 
 extern const std::string DEVICE_NAME;
 extern const std::string DEVICE_TYPE;
@@ -51,6 +52,14 @@ inline int dbg_print(const char *fmt, ...)
     }
 
     return 0;
+}
+
+inline bool file_exists(const char *path)
+{
+    if (!access(path, 0))
+        return true;
+
+    return false;
 }
 
 #endif

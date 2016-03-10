@@ -1,7 +1,6 @@
 #include "key_device.hpp"
 
 #include <fcntl.h>
-#include <unistd.h>
 #include <linux/input.h>
 
 KeyDevice::KeyDevice(const Json::Value &key)

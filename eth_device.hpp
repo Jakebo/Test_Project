@@ -7,7 +7,6 @@
 #include <netinet/ip_icmp.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
-#include <unistd.h>
 
 class EthDevice : public BaseDevice {
 public:
