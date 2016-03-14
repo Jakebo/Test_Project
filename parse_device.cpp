@@ -5,6 +5,7 @@
 #include "eth_device.hpp"
 #include "key_device.hpp"
 #include "storage_device.hpp"
+#include "mtd_device.hpp"
 
 // Root of json file(global)
 Json::Value root;
@@ -114,11 +115,25 @@ static int create_storage(const Json::Value &storage)
 }
 
 //
+// Create mtd device
+//   Create mtd device from json file
+//
+static int create_mtd(const Json::Value &mtd)
+{
+    MtdDevice *mtdDevice = new MtdDevice(mtd);
+
+    device_map_insert(mtd, mtdDevice);
+
+    return 0;
+}
+
+//
 // init_create_map
 // Create the global map of creating function
 //
 void init_create_map(void)
 {
+    // make_pair(device_type, create_function)
     create_device_map.insert(make_pair(std::string("uart"),
                                        create_uart));
     create_device_map.insert(make_pair(std::string("eth"),
@@ -127,6 +142,8 @@ void init_create_map(void)
                                        create_keys));
     create_device_map.insert(make_pair(std::string("storage"),
                                        create_storage));
+    create_device_map.insert(make_pair(std::string("mtd"),
+                                       create_mtd));
 }
 
 //
@@ -159,7 +176,11 @@ int parse_device(Json::Value &value)
         dbg_print("INFO: Got device [%s]\n",
                   value[DEVICE_NAME].asString().c_str());
         // Create device instance according device type
-        (*create_device_map[value[DEVICE_TYPE].asString()])(value);
+        if (create_device_map[value[DEVICE_TYPE].asString()] != NULL)
+            (*create_device_map[value[DEVICE_TYPE].asString()])(value);
+        else
+            dbg_print("INFO: Not the function to create a %s instance\n",
+                      value[DEVICE_TYPE].asString().data());
     } break;
     default:
         break;

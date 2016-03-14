@@ -3,6 +3,16 @@
 #include <termios.h>
 #include <fcntl.h>
 #include <string.h>
+#include <sys/ioctl.h>
+#include <linux/serial.h>
+
+#ifndef TIOCSRS485
+    #define TIOCSRS485     0x542F
+#endif
+
+#ifndef TIOCGRS485
+    #define TIOCGRS485     0x542E
+#endif
 
 UartDevice::UartDevice(const Json::Value &uart)
     : BaseDevice(uart)
@@ -34,6 +44,40 @@ bool UartDevice::TestDevice(void)
     if (this->UartTestTransmit() != 0)
         return false;
     
+    return true;
+}
+
+bool UartDevice::Uart485Enable(bool enable)
+{
+    struct serial_rs485 rs485conf;
+    int res;
+
+    dbg_print("INFO: Enable rs485 for %s\n", this->deviceNode.data());
+    /* Get configure from device */
+    res = ioctl(this->uartFd, TIOCGRS485, &rs485conf);
+    if (res < 0) {
+        dbg_print("ERROR: Ioctl error on getting 485 configure %s",
+                  this->deviceNode.data());
+        return false;
+    }
+
+    /* Set enable/disable to configure */
+    if (enable) {   // Enable rs485 mode
+        rs485conf.flags |= SER_RS485_ENABLED;
+    } else {        // Disable rs485 mode
+        rs485conf.flags &= ~(SER_RS485_ENABLED);
+    }
+
+    rs485conf.delay_rts_before_send = 0x00000004;
+
+    /* Set configure to device */
+    res = ioctl(this->uartFd, TIOCSRS485, &rs485conf);
+    if (res < 0) {
+        dbg_print("ERROR: Ioctl error on setting 485 configure %s",
+                  this->deviceNode.data());
+        return false;
+    }
+
     return true;
 }
 
@@ -137,6 +181,8 @@ int UartDevice::UartSetting(void)
         break;
     }
 
+//    cfg.c_cc[VMIN] = this->testStr.length() - 1;
+    
     tcflush(this->uartFd, TCIFLUSH);
     // Enable the setting now
     if ((tcsetattr(this->uartFd, TCSANOW, &cfg)) != 0) {
@@ -146,6 +192,9 @@ int UartDevice::UartSetting(void)
     }
 
     // @TODO: Add rs485 support
+    if (this->isRS485Mode)
+        if (!this->Uart485Enable(true))
+            return -1;
     
     return 0;
 }
@@ -219,7 +268,7 @@ int UartDevice::UartTestTransmit(void)
         xmitCnt += ret;
         dbg_print("INFO: transmit: %s, %d\n", testStr.data(), xmitCnt);
 
-        usleep(50000);
+        usleep(100000);
         
         // Receive data
         memset(recvBuf, '\0', sizeof(recvBuf));

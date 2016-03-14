@@ -11,6 +11,7 @@ public:
 
     int  UartInit(void);
     int  UartSetting(void);
+    bool Uart485Enable(bool enable);
     int  UartCheckString(const char *base, const char *buf);
     int  UartTestTransmit(void);
     

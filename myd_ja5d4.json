@@ -7,7 +7,7 @@
         "databit" : 8,
         "parity" : "n",
         "stopbit" : 1,
-        "loop" : 100,
+        "loop" : 32,
         "teststr" : "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     },
     {
@@ -20,14 +20,14 @@
     {
         "name" : "eth1",
         "device_type" : "eth",
-        "ipaddr" : "192.168.2.113",
+        "ipaddr" : "192.168.2.223",
         "destip" : "192.168.2.1",
         "loop"   : 10
     },
     {
         "name" : "keys",
         "device_type" : "key",
-        "device_node" : "/dev/input/event1",
+        "device_node" : "/dev/input/event0",
         "codes" : [
             { "code" : 256 }
         ]
@@ -41,6 +41,11 @@
         "name" : "sdb1",
         "device_type" : "storage",
         "device_node" : "/dev/sdb1"
+    },
+    {
+        "name" : "mmcblk0p1",
+        "device_type" : "storage",
+        "device_node" : "/dev/mmcblk0p1"
     },
     {
         "name" : "mtd8",
