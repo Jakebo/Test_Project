@@ -69,6 +69,8 @@ bool StorageDevice::StorageRWTest(const std::string &path)
 
 bool StorageDevice::TestDevice(void)
 {
+    this->testResult = false;
+    
     if (!file_exists(this->node.data())) {
         dbg_print("ERROR: %s is not exists\n",
                   this->node.data());
@@ -80,7 +82,8 @@ bool StorageDevice::TestDevice(void)
         // @TODO: try to mount the storage device
         ;
 
-    return this->StorageRWTest(mountPath);
+    this->testResult = this->StorageRWTest(mountPath);
+    return this->testResult;
 }
 
 StorageDevice::~StorageDevice()

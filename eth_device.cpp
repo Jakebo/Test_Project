@@ -80,6 +80,7 @@ bool EthDevice::TestDevice(void)
     int failCount = 0;
     int total = this->loop;
 
+    this->testResult = false;
     this->EthInit();
     
     while (--(this->loop)) {
@@ -101,6 +102,8 @@ bool EthDevice::TestDevice(void)
     if (failCount > 0)
         return false;
 
+    this->testResult = true;
+    
     return true;
 }
 

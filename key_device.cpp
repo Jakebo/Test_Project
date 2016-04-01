@@ -48,6 +48,8 @@ bool KeyDevice::TestDevice(void)
     struct input_event ie;
     int idx = 0;
 
+    this->testResult = false;
+    
     this->keyPass = 0;
     
     if (this->keyCnt < 1)
@@ -77,6 +79,8 @@ bool KeyDevice::TestDevice(void)
         if (((1 << this->keyCnt) - 1) & this->keyPass)
             break;
     }
+
+    this->testResult = true;
     
     return true;
 }

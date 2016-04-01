@@ -35,7 +35,7 @@ UartDevice::UartDevice(const Json::Value &uart)
 
 bool UartDevice::TestDevice(void)
 {
-    dbg_print("Start test %s\n", this->name.c_str());
+    this->testResult = false;
 
     if (this->uartFd < 0)
         if (this->UartInit() != 0)
@@ -43,6 +43,8 @@ bool UartDevice::TestDevice(void)
 
     if (this->UartTestTransmit() != 0)
         return false;
+
+    this->testResult = true;
     
     return true;
 }
@@ -78,6 +80,7 @@ bool UartDevice::Uart485Enable(bool enable)
         return false;
     }
 
+    
     return true;
 }
 

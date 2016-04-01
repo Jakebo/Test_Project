@@ -20,6 +20,8 @@ bool MtdDevice::MtdRWTest(const std::string &mtd)
     int ret = 0;
     int mtdFd;
 
+    this->testResult = false;
+    
     dbg_print("INFO: Flashing %s...\n", mtd.data());
     ret = system(command.data());
     if ((ret = WEXITSTATUS(ret)) != 0) {
@@ -53,6 +55,7 @@ bool MtdDevice::MtdRWTest(const std::string &mtd)
         return false;
     } else {
         delete []readBack;
+        this->testResult = true;
         return true;
     }
 }    

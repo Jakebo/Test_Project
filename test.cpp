@@ -2,6 +2,8 @@
 #include "parse_device.hpp"
 #include "common.hpp"
 
+#include <string.h>
+
 static const  char *OK = "\033[32mOK\033[0m";
 static const char *FAIL = "\033[31mFAIL\033[0m";
 
@@ -30,6 +32,35 @@ static int test_single(void)
     }
     
     return 0;
+}
+
+//
+// print_result
+//
+static void print_result(void)
+{
+    printf("=================================================\n");
+    printf(">>> Testing results\n");
+    printf("=================================================\n");
+
+    char result[64] = { '\0' };
+    int index = 1;
+    std::map<std::string, BaseDevice *>::iterator it;
+    for (it = device_map.begin();
+         it != device_map.end();
+         ++it, ++index) {
+        memset(result, '\0', sizeof(result));
+        sprintf(result, "> %d. %s [%s]", index, it->first.c_str(),
+                it->second->GetTestResult() ? OK : FAIL);
+        printf("%-38s", result);
+        if ((++it) == device_map.end()) {
+            printf("\n");
+            break;
+        }
+        printf("> %d. %s [%s]\n", ++index, it->first.c_str(),
+               it->second->GetTestResult() ? OK : FAIL);
+    }
+    printf("-------------------------------------------------\n");
 }
 
 //
@@ -67,6 +98,7 @@ int test_process(void)
             printf("\033[32mINFO: ########## TEST SUCCESS ###########\033[0m\n");
         else
             printf("\033[31mERROR: ######### TEST FAILED ############\033[0m\n");
+        print_result();
     } else {
         test_single();
     }

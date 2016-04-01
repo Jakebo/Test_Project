@@ -21,7 +21,6 @@ protected:
     std::string name;
     std::string deviceType;
 
-private:
     bool testResult = false;
 };
 
